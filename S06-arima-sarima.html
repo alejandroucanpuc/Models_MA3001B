@@ -1,0 +1,281 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Metodología Box-Jenkins (ARIMA/SARIMA)</title>
+
+    <!-- Reveal.js Core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Reveal.js Theme (Night/Dark mode) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css" id="theme">
+
+    <!-- Highlight.js Theme for Python Code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.min.css">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS to enhance Reveal.js defaults -->
+    <style>
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: #38bdf8;
+            text-transform: none;
+        }
+        .reveal h1 { font-size: 2.5em; }
+        .reveal h2 { font-size: 1.8em; border-bottom: 2px solid rgba(56, 189, 248, 0.3); padding-bottom: 10px; margin-bottom: 30px;}
+        .reveal p, .reveal li { font-size: 0.85em; line-height: 1.4; }
+        
+        .two-column {
+            display: flex;
+            gap: 40px;
+            text-align: left;
+        }
+        .two-column > div {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .accent { color: #a78bfa; font-weight: bold; }
+        .highlight-text { color: #38bdf8; font-weight: bold; }
+        
+        /* Math block container */
+        .math-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #a78bfa;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Lists */
+        ul.custom-list {
+            list-style: none;
+            padding: 0;
+        }
+        ul.custom-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        ul.custom-list li::before {
+            content: "\f105";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #38bdf8;
+        }
+
+        /* Code adjustments */
+        .reveal pre { width: 100%; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .reveal pre code { max-height: 500px; font-size: 1.0em; line-height: 1.3; }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Slide 1: Title -->
+            <section>
+                <h4 style="color: #a78bfa; font-size: 1em; text-transform: uppercase; letter-spacing: 2px;">Desarrollo de Proyectos en Ingeniería Matemática</h4>
+                <h1>Metodología Box-Jenkins</h1>
+                <h3>Modelos ARIMA / SARIMA</h3>
+                <p>Del dominio de la estadística clásica al forecasting de series de tiempo complejas.</p>
+            </section>
+
+            <!-- Slide 2: Repaso Estacionariedad -->
+            <section>
+                <h2>1. Fase de Repaso</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 30px;">El Espacio de los Procesos Estacionarios</h4>
+                <div style="text-align: left;">
+                    <p>El formalismo de Box-Jenkins se basa en el <strong>Operador de Rezago ($B$)</strong>, definido como:</p>
+                    <div class="math-box">
+                        $$B y_t = y_{t-1}$$
+                    </div>
+                    <p>A partir de este operador, construimos los procesos fundamentales:</p>
+                    <ul class="custom-list">
+                        <li><span class="highlight-text">AR(p):</span> $\phi_p(B)y_t = \varepsilon_t$. Raíces de $\phi(z)=0$ deben estar fuera del círculo unitario para asegurar estacionariedad.</li>
+                        <li><span class="highlight-text">MA(q):</span> $y_t = \theta_q(B)\varepsilon_t$. Siempre estacionarios, requieren invertibilidad para representarse como AR($\infty$).</li>
+                        <li><span class="highlight-text">ARMA(p,q):</span> Combinación de ambos: $\phi(B)y_t = \theta(B)\varepsilon_t$.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 3: ARIMA -->
+            <section>
+                <h2>2. Modelos ARIMA</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 20px;">Integración y Homogeneidad</h4>
+                <div class="two-column">
+                    <div>
+                        <p>Cuando la serie <span class="accent">no es estacionaria en media</span> (presenta tendencia), introducimos el operador de diferencia $\nabla = (1-B)$.</p>
+                        <p>Definición formal de un <strong>ARIMA(p,d,q)</strong>:</p>
+                        <div class="math-box">
+                            $$\phi_p(B)\nabla^d y_t = \theta_q(B)\varepsilon_t$$
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #38bdf8;"><i class="fa-solid fa-lightbulb" style="color: #fbbc04;"></i> Intuición</h4>
+                        <p>El parámetro <span class="highlight-text">$d$</span> representa cuántas <em>"derivadas discretas"</em> aplicamos hasta que el proceso se vuelve estacionario.</p>
+                        <p>Típicamente $d \in \{0, 1, 2\}$. Si diferenciamos demasiado, inducimos sobrediferenciación y ruido artificial.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: SARIMA -->
+            <section>
+                <h2>3. Modelos SARIMA</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 20px;">La Dimensión Estacional</h4>
+                <p style="text-align: left;">Para series con periodicidad $s$ (ej. $s=12$ para datos mensuales), extendemos el modelo de forma multiplicativa sumando componentes estacionales $P, D, Q$:</p>
+                
+                <div class="math-box" style="font-size: 0.9em;">
+                    <strong>SARIMA $(p,d,q) \times (P,D,Q)_s$</strong>
+                    $$\phi_p(B)\Phi_P(B^s)\nabla^d \nabla_s^D y_t = \theta_q(B)\Theta_Q(B^s)\varepsilon_t$$
+                </div>
+
+                <div style="background: rgba(167, 139, 250, 0.1); border-left: 4px solid #a78bfa; padding: 15px; text-align: left;">
+                    <p style="margin: 0;"><i class="fa-solid fa-magnifying-glass" style="color: #a78bfa; margin-right: 10px;"></i> <strong>Identificación:</strong> Observamos "spikes" (picos significativos) en las gráficas ACF y PACF ubicados exactamente en múltiplos de $s$ (lags 12, 24, 36...).</p>
+                </div>
+            </section>
+
+            <!-- Slide 5: Metodología Box-Jenkins -->
+            <section>
+                <h2>4. Metodología Box-Jenkins</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 30px;">El Ciclo Iterativo</h4>
+                <div class="two-column" style="font-size: 0.9em;">
+                    <div>
+                        <h4 style="color: #38bdf8;">1. Identificación</h4>
+                        <ul>
+                            <li>Estabilizar varianza (Log o Box-Cox).</li>
+                            <li>Determinar $d$ y $D$ vía <span class="accent">Test ADF (Dickey-Fuller)</span>.</li>
+                            <li>Analizar ACF/PACF para $p,q,P,Q$.</li>
+                        </ul>
+                        <h4 style="color: #38bdf8; margin-top: 20px;">2. Estimación</h4>
+                        <ul>
+                            <li>Ajustar coeficientes mediante MLE (Máxima Verosimilitud) o Mínimos Cuadrados No Lineales.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #38bdf8;">3. Diagnóstico</h4>
+                        <ul>
+                            <li>Residuales $\hat{\varepsilon}_t$ deben ser <strong>ruido blanco</strong>.</li>
+                            <li><span class="accent">Test Ljung-Box:</span> $H_0$: Los residuales son independientes.</li>
+                        </ul>
+                        <h4 style="color: #38bdf8; margin-top: 20px;">4. Forecasting</h4>
+                        <ul>
+                            <li>Predicciones de Mínimo Error Cuadrático Medio (MMSE).</li>
+                            <li>Generación de intervalos de confianza.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Workshop Python (Diag) -->
+            <section>
+                <h2>5. Implementación en Python</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 1: Diagnóstico de Estacionariedad</h4>
+                <pre><code class="python" data-trim data-noescape data-line-numbers="1-4|6-7|9-14|16-20|22-26">
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+# Cargar datos (ejemplo Serie G de Box-Jenkins)
+data = pd.read_csv('airline_passengers.csv', index_col='Month', parse_dates=True)
+
+# 1. Función de Test ADF
+def check_stationarity(series):
+    result = adfuller(series)
+    print(f'ADF Statistic: {result[0]:.4f}')
+    print(f'p-value: {result[1]:.4f}') # Si p < 0.05, es estacionaria
+
+# Aplicar log y diferencia estacional (s=12) para remover tendencia/estacionalidad
+data['log_passengers'] = np.log(data['Passengers'])
+data['diff_seasonal'] = data['log_passengers'].diff(12).dropna()
+
+check_stationarity(data['diff_seasonal'])
+
+# 2. Identificación visual (ACF / PACF)
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+plot_acf(data['diff_seasonal'], ax=ax[0], lags=40)
+plot_pacf(data['diff_seasonal'], ax=ax[1], lags=40)
+plt.show()
+                </code></pre>
+            </section>
+
+            <!-- Slide 7: Workshop Python (Ajuste) -->
+            <section>
+                <h2>5. Implementación en Python</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 2: Ajuste SARIMA y Diagnóstico</h4>
+                <pre><code class="python" data-trim data-noescape data-line-numbers="1-2|4-8|10-15|17-20">
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+# Ajuste del modelo SARIMA(0,1,1)(0,1,1)12 (Modelo clásico 'Airline')
+model = SARIMAX(data['log_passengers'], 
+                order=(0, 1, 1), 
+                seasonal_order=(0, 1, 1, 12))
+results = model.fit()
+
+# Resumen estadístico (AIC, BIC, Coeficientes, Ljung-Box)
+print(results.summary())
+
+# Diagnóstico visual de residuales (Normalidad, ACF residual)
+results.plot_diagnostics(figsize=(15, 12))
+plt.show()
+
+# Pronóstico MMSE (Próximos 12 meses)
+forecast = results.get_forecast(steps=12)
+forecast_df = forecast.summary_frame() # Incluye IC al 95%
+print(forecast_df)
+                </code></pre>
+            </section>
+
+            <!-- Slide 8: Reto Final -->
+            <section>
+                <h2><i class="fa-solid fa-flag-checkered" style="color: #a78bfa; margin-right: 15px;"></i>Reto para los Alumnos</h2>
+                <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 30px; text-align: left;">
+                    <p style="font-size: 1.1em; color: #f8fafc;">Utilicen los Criterios de Información <span class="highlight-text">AIC y BIC</span> para comparar matemáticamente el modelo SARIMA contra un modelo puramente autorregresivo <code>ARIMA(1,1,1)</code> sin componente estacional.</p>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                    <p><i class="fa-solid fa-brain" style="color: #38bdf8; margin-right: 10px;"></i> <strong>Discusión:</strong> Justifiquen por qué el principio de la <span class="accent">Parsimonia</span> (penalización por añadir parámetros extra) es vital para evitar el sobreajuste al pronosticar el futuro.</p>
+                </div>
+                <h4 style="color: #38bdf8; margin-top: 40px; font-style: italic;">¡Vamos a transformar esos datos ruidosos en señales deterministas!</h4>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Core JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    
+    <!-- Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/math/math.min.js"></script>
+
+    <!-- Initialization -->
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: false, // Changed from true to false to prevent SecurityError in sandboxed iframes
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+            
+            // Plugins: Highlight for code, Math for LaTeX
+            plugins: [ RevealHighlight, RevealMath.KaTeX ]
+        });
+    </script>
+
+</body>
+</html>
+
+
+```
