@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>PCA Aplicado a Series de Tiempo</title>
+
+    <!-- Reveal.js Core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Theme (White/Light theme for a clean look) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css" id="theme">
+
+    <!-- Highlight.js Theme for Code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/github.min.css">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Tweaks -->
+    <style>
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: #2c3e50;
+            text-transform: none;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        .reveal h1 { font-size: 2.2em; font-weight: bold; }
+        .reveal h2 { font-size: 1.6em; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 30px;}
+        .reveal p, .reveal li { font-size: 0.85em; line-height: 1.5; color: #34495e; text-align: left;}
+        
+        .two-column {
+            display: flex;
+            gap: 40px;
+            text-align: left;
+        }
+        .two-column > div {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .accent { color: #e74c3c; font-weight: bold; }
+        .highlight-text { color: #2980b9; font-weight: bold; }
+        
+        /* Math block container */
+        .math-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        /* Lists */
+        ul.custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul.custom-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        ul.custom-list li::before {
+            content: "\f105";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #3498db;
+        }
+
+        .takeaway {
+            background: #eafaf1;
+            border-left: 5px solid #2ecc71;
+            padding: 20px;
+            border-radius: 4px;
+            font-size: 1.1em;
+            text-align: center;
+            margin-top: 30px;
+            color: #145a32;
+        }
+        
+        /* Code adjustments */
+        .reveal pre { width: 100%; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .reveal pre code { max-height: 500px; font-size: 0.95em; line-height: 1.3; border-radius: 4px;}
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Slide 1 — Portada -->
+            <section>
+                <h1>PCA aplicado a Series de Tiempo</h1>
+                <h3 style="color: #7f8c8d; font-size: 1.2em;">Intuición, formulación, variantes y aplicaciones prácticas</h3>
+                <div style="margin-top: 50px; border-top: 1px solid #bdc3c7; padding-top: 20px;">
+                    <p style="text-align: center; font-size: 0.8em; margin: 0;"><strong>Autor:</strong> Alejandro Ucan-Puc</p>
+                    <p style="text-align: center; font-size: 0.8em; margin: 0;"><strong>Fecha:</strong> Mayo 2026</p>
+                    <p style="text-align: center; font-size: 0.8em; margin: 0;"><strong>Curso:</strong> MA3001B - Desarrollo de Proyectos de Ingeniería Matemática Aplicada</p>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Introducción rápida del objetivo: aprender cómo y cuándo aplicar PCA (y sus variantes) a datos temporales.
+                </aside>
+            </section>
+
+            <!-- Slide 2 — Agenda -->
+            <section>
+                <h2>Agenda</h2>
+                <ul class="custom-list" style="font-size: 1.05em; line-height: 1.8;">
+                    <li>¿Qué busca PCA en series temporales?</li>
+                    <li>Supuestos y preprocesamiento</li>
+                    <li>PCA clásica (SVD) y fórmulas</li>
+                    <li>Variantes específicas: Multiseries, SSA, DFM, FPCA</li>
+                    <li>Algoritmo práctico para forecasting</li>
+                    <li>Consideraciones, diagnóstico y ejemplos</li>
+                    <li>Recursos y ejercicios</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Repasa la ruta de la charla y el objetivo de cada bloque.
+                </aside>
+            </section>
+
+            <!-- Slide 3 — ¿Qué pretende lograr PCA? -->
+            <section>
+                <h2>¿Qué pretende lograr PCA en Series de Tiempo?</h2>
+                <ul class="custom-list">
+                    <li><span class="highlight-text">Reducir la dimensión</span> de paneles de series altamente correlacionadas.</li>
+                    <li>Extraer <strong>factores latentes o scores</strong> que capturan los co-movimientos principales del sistema.</li>
+                    <li><span class="accent">Filtrar ruido</span> y facilitar el forecasting modelando dinámicas de baja dimensión (scores) en lugar de $p$ series ruidosas.</li>
+                    <li>Aplicable también a una <em>única</em> serie univariante mediante la técnica de "lag-embedding" (SSA).</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Motiva con ejemplos: ventas por tienda (panel retail), indicadores macroeconómicos por país, o señales de múltiples sensores IoT.
+                </aside>
+            </section>
+
+            <!-- Slide 4 — Hipótesis / supuestos principales -->
+            <section>
+                <h2>Hipótesis y Supuestos Principales</h2>
+                <ul class="custom-list">
+                    <li><strong>Linealidad:</strong> Las componentes principales son combinaciones lineales de las variables originales.</li>
+                    <li><strong>Información en 2do orden:</strong> La matriz de covarianza (o correlación) contiene la estructura de dependencia relevante.</li>
+                    <li><strong>Escalas:</strong> Requiere escalas comparables o normalización (estandarización) previa.</li>
+                    <li><strong>Análisis Temporal:</strong> Se asume <span class="highlight-text">estacionariedad débil</span> o se requiere estabilizar la serie mediante transformaciones (diferencias, desestacionalización) antes de aplicar SVD.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Señala limitaciones cuando existan relaciones no lineales fuertes o cambios estructurales repentinos.
+                </aside>
+            </section>
+
+            <!-- Slide 5 — Notación clave -->
+            <section>
+                <h2>Notación Clave</h2>
+                <div class="two-column" style="gap: 20px;">
+                    <div>
+                        <ul style="list-style-type: none; padding:0;">
+                            <li style="margin-bottom: 15px;">$x_t \in \mathbb{R}^p$ : Observaciones conjuntas en el tiempo $t$.</li>
+                            <li style="margin-bottom: 15px;">$X \in \mathbb{R}^{T \times p}$ : Matriz de datos (filas = tiempos).</li>
+                            <li style="margin-bottom: 15px;">$\bar{x}$ : Media muestral por variable.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul style="list-style-type: none; padding:0;">
+                            <li style="margin-bottom: 15px;">$\tilde{X} = X - \mathbf{1}\bar{x}^\top$ : Datos centrados.</li>
+                            <li style="margin-bottom: 15px;">$U, D, V$ : Descomposición SVD de $\tilde{X}$.</li>
+                            <li style="margin-bottom: 15px;">$z_t^{(k)} = u_k^\top(x_t-\bar{x})$ : Score de la componente $k$.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="takeaway" style="margin-top: 20px; padding: 15px;">
+                    <em>Asegurar la distinción entre centrar (restar la media) y escalar (dividir por desviación estándar).</em>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Asegúrate que la audiencia entiende diferencias entre centrado y escalado antes de ver las matemáticas.
+                </aside>
+            </section>
+
+            <!-- Slide 6 — PCA clásica (SVD) -->
+            <section>
+                <h2>PCA Clásica (SVD) — Fórmulas</h2>
+                <p>Matriz de covarianza muestral:</p>
+                <div class="math-box">
+                    $$ \Sigma = \frac{1}{T-1}\tilde{X}^\top\tilde{X} $$
+                </div>
+                <p>Eigen-descomposición ($\lambda_1 \ge \lambda_2 \ge \dots$):</p>
+                <div class="math-box">
+                    $$ \Sigma u_k = \lambda_k u_k $$
+                </div>
+                <p>Equivalencia a Descomposición en Valores Singulares (SVD):</p>
+                <div class="math-box">
+                    $$ \tilde{X} = U\,D\,V^\top $$
+                </div>
+                <p style="font-size: 0.8em; color: #7f8c8d; text-align: center;">(Las columnas de $V$ son los autovectores $u_k$, y las proyecciones o scores son $Z = \tilde{X}V_r$)</p>
+                <aside class="notes">
+                    Nota del presentador: Explica por qué calcular la SVD de la matriz de datos es numéricamente preferible y más estable que calcular autovectores de la matriz de covarianza.
+                </aside>
+            </section>
+
+            <!-- Slide 7 — Selección de componentes -->
+            <section>
+                <h2>Selección de Componentes ($r$)</h2>
+                <p>Métrica principal: <span class="highlight-text">Varianza Explicada</span></p>
+                <div class="math-box" style="margin-bottom: 30px;">
+                    $$ \text{VarExp}(r) = \frac{\sum_{k=1}^r \lambda_k}{\sum_{k=1}^p \lambda_k} $$
+                </div>
+                <ul class="custom-list">
+                    <li><strong>Criterios Empíricos:</strong> Umbral de varianza (ej. retener $80\% - 95\%$), Gráfico Scree (buscar el "codo").</li>
+                    <li><strong>Criterios Analíticos:</strong> Criterios de Información (AIC/BIC para Modelos Factoriales Dinámicos).</li>
+                    <li><span class="accent">El Trade-off:</span> Reducción de ruido vs. pérdida de señales sutiles pero valiosas para el forecasting.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Recomienda combinar criterios visuales (scree plot) con validación temporal (backtesting del forecast final).
+                </aside>
+            </section>
+
+            <!-- Slide 8 — Esquema de Forecasting -->
+            <section>
+                <h2>PCA en Paneles: Esquema de Forecast</h2>
+                <div style="background: #eef2f5; padding: 25px; border-radius: 8px;">
+                    <ol style="line-height: 1.8; font-weight: 500;">
+                        <li><strong>Preprocesamiento:</strong> Centrar, Escalar (opcional), Desestacionalizar/Diferenciar.</li>
+                        <li><strong>Reducción:</strong> Calcular SVD y seleccionar $r$ componentes principales.</li>
+                        <li><strong>Proyección:</strong> Obtener los <em>Scores</em> reducidos $Z_t \in \mathbb{R}^r$.</li>
+                        <li><strong>Modelado Dinámico:</strong> Ajustar modelos temporales a los scores (AR, ARIMA, VAR multivariado).</li>
+                        <li><strong>Reconstrucción:</strong> Predecir $\hat{Z}_{t+h}$ y mapear de vuelta al espacio original:
+                            <div class="math-box" style="margin: 10px 0; background: #fff;">
+                                $$ \hat{X}_{t+h} = \mathbf{1}\bar{x}^\top + \hat{Z}_{t+h}V_r^\top $$
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Resalta la ventaja computacional y estadística: ajustar un VAR a 3 componentes es mucho más estable que ajustar un VAR a 50 series ruidosas.
+                </aside>
+            </section>
+
+            <!-- Slide 9 — Singular Spectrum Analysis (SSA) -->
+            <section>
+                <h2>PCA Univariante: SSA</h2>
+                <h4 style="color: #7f8c8d; font-size: 1.1em; margin-bottom: 20px;">Singular Spectrum Analysis</h4>
+                <p>Construir la matriz <strong>Hankel</strong> (Lag-Embedding con ventana $L$):</p>
+                <div class="math-box" style="font-size: 0.85em;">
+                    $$
+                    H = 
+                    \begin{bmatrix}
+                    y_1 & y_2 & \cdots & y_K \\
+                    y_2 & y_3 & \cdots & y_{K+1} \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    y_L & y_{L+1} & \cdots & y_T
+                    \end{bmatrix},\quad K=T-L+1
+                    $$
+                </div>
+                <ul class="custom-list" style="margin-top: 20px;">
+                    <li>Aplicar SVD a $H$, agrupar modos singulares y reconstruir componentes.</li>
+                    <li><span class="highlight-text">Ventaja:</span> Separa tendencia, oscilaciones periódicas y ruido de una sola serie, <strong>sin requerir</strong> conocimiento previo del periodo estacional.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Menciona la importancia de elegir la ventana L (suele ser proporcional a la estacionalidad esperada) y cómo pares de valores singulares similares indican un componente oscilatorio.
+                </aside>
+            </section>
+
+            <!-- Slide 10 — Variantes Avanzadas -->
+            <section>
+                <h2>Variantes Dinámicas y Funcionales</h2>
+                <div class="two-column" style="gap: 20px;">
+                    <div>
+                        <h4 style="color: #2980b9;">Dynamic Factor Models (DFM)</h4>
+                        <p style="font-size: 0.9em;">Extrae factores latentes asumiendo dinámicas temporales explícitas (VAR) y ruido idiosincrásico, resuelto vía Filtro de Kalman o EM.</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2980b9;">Functional PCA (FPCA)</h4>
+                        <p style="font-size: 0.9em;">Cada observación es una <em>curva continua</em> (ej. perfiles intradiarios). Extrae funciones base (eigen-funciones) que explican la variabilidad geométrica.</p>
+                    </div>
+                </div>
+                <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin-top: 20px;">
+                    <p style="margin: 0;"><strong>Elección:</strong> Depende del objetivo: reducir dimensión estática (PCA), aislar ciclos (SSA) o modelar econometría con variables latentes (DFM).</p>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Da ejemplos: DFM es el rey en macroeconomía para crear índices de coincidencia. FPCA se usa mucho en perfiles de demanda eléctrica diaria.
+                </aside>
+            </section>
+
+            <!-- Slide 11 — Preprocesamiento -->
+            <section>
+                <h2>Decisiones Prácticas de Pipeline</h2>
+                <ul class="custom-list" style="line-height: 1.8;">
+                    <li><strong>Centrado y Escalado:</strong> Obligatorio centrar. Escalar a varianza unitaria si las variables están en distintas magnitudes físicas.</li>
+                    <li><strong>Estacionariedad:</strong> Si la matriz de covarianza "flota", considerar primeras diferencias.</li>
+                    <li><strong>Valores Faltantes (Missing):</strong> Imputación simple previa, o usar SVD Iterativo (Expectation-Maximization) para evitar distorsiones.</li>
+                    <li><strong>Cambios Estructurales:</strong> Si la relación entre series cambia, calcular PCA sobre <em>Rolling Windows</em> (Ventanas móviles).</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Subraya que aplicar PCA directamente a series no estacionarias a menudo arroja una Componente Principal 1 que es simplemente la tendencia global.
+                </aside>
+            </section>
+
+            <!-- Slide 12 — Diagnóstico -->
+            <section>
+                <h2>Diagnóstico y Validación</h2>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: #e74c3c;">Análisis Estático</h4>
+                        <ul style="padding-left: 20px; font-size: 0.9em;">
+                            <li>Scree Plot y Varianza Acumulada.</li>
+                            <li>Interpretar los <strong>Loadings</strong> ($V$) para dar sentido de negocio a cada factor.</li>
+                            <li>Analizar la ACF/PACF de los Scores para modelado.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #2980b9;">Análisis Dinámico</h4>
+                        <ul style="padding-left: 20px; font-size: 0.9em;">
+                            <li>Evaluar error de reconstrucción (RMSE por serie individual).</li>
+                            <li><span class="highlight-text">Backtesting:</span> Ejecutar predicciones "Out-of-Sample" y medir métricas (MAE, MAPE).</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Recomienda fuertemente no quedarse solo en el scree plot. El mejor "r" estadístico no siempre produce el mejor RMSE en el backtesting de forecasting.
+                </aside>
+            </section>
+
+            <!-- Slide 13 — Limitaciones -->
+            <section>
+                <h2>Limitaciones y Advertencias</h2>
+                <ul class="custom-list" style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Combinaciones Lineales:</strong> PCA no captura manifolds curvos o no lineales (considerar Autoencoders o t-SNE / UMAP temporal).</li>
+                    <li><strong>Pérdida de Interpretabilidad:</strong> Salvo que se apliquen rotaciones (Varimax), los factores pueden mezclar efectos causales confusos.</li>
+                    <li><strong>Sensibilidad:</strong> Muy sensible a <em>outliers</em> extremos si la matriz no es robusta.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Da un ejemplo donde PCA agrupa dos variables anticorrelacionadas en un factor sin sentido físico directo, dificultando la explicación a negocio.
+                </aside>
+            </section>
+
+            <!-- Slide 14 — Implementaciones -->
+            <section>
+                <h2>Herramientas en Python y R</h2>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: #f1c40f;"><i class="fa-brands fa-python" style="margin-right: 10px;"></i>Python</h4>
+                        <ul style="padding-left: 20px; font-size: 0.85em;">
+                            <li>PCA Clásico: <code>sklearn.decomposition.PCA</code></li>
+                            <li>SVD crudo: <code>numpy.linalg.svd</code></li>
+                            <li>DFM: <code>statsmodels.tsa.statespace.DynamicFactor</code></li>
+                            <li>SSA: Paquete <code>pyssa</code>.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #3498db;"><i class="fa-brands fa-r-project" style="margin-right: 10px;"></i>R Project</h4>
+                        <ul style="padding-left: 20px; font-size: 0.85em;">
+                            <li>Base: <code>prcomp()</code>, <code>princomp()</code></li>
+                            <li>SSA: Paquete <code>Rssa</code></li>
+                            <li>DFM/VAR: Paquetes <code>vars</code>, <code>dynlm</code>, <code>fable</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Menciona que Scikit-Learn es ideal para la reducción pura, pero Statsmodels es necesario para el pipeline completo DFM integrado.
+                </aside>
+            </section>
+
+            <!-- Slide 15 — Ejemplo Conceptual -->
+            <section>
+                <h2>Ejemplo Conceptual: Python Workflow</h2>
+                <pre><code class="python" data-trim data-noescape>
+from sklearn.decomposition import PCA
+from statsmodels.tsa.ar_model import AutoReg
+
+# 1. Ajustar PCA (r=1) sobre panel centrado
+pca = PCA(n_components=1)
+z_t = pca.fit_transform(X_centered)  # Scores latentes
+u_1 = pca.components_                # Loadings
+
+# 2. Modelar y pronosticar el score z_t (ej. AR(1))
+ar_model = AutoReg(z_t, lags=1).fit()
+z_pred = ar_model.predict(start=len(z_t), end=len(z_t)+5)
+
+# 3. Reconstruir a la dimensión original (p series)
+X_pred = np.dot(z_pred.reshape(-1, 1), u_1) + X_mean
+                </code></pre>
+                <aside class="notes">
+                    Nota del presentador: Sugiere replicar este pequeño pipeline en vivo si el tiempo lo permite.
+                </aside>
+            </section>
+
+            <!-- Slide 16 — Ejercicios propuestos -->
+            <section>
+                <h2>Ejercicios para la Clase</h2>
+                <div style="background: #eef2f5; padding: 25px; border-radius: 8px;">
+                    <ol style="line-height: 1.6; font-weight: 500;">
+                        <li style="margin-bottom: 15px;">Aplicar PCA a un panel macroeconómico de $p=15$ variables. Construir el scree plot y justificar $r$.</li>
+                        <li style="margin-bottom: 15px;">Implementar Singular Spectrum Analysis (SSA) en una serie univariante con estacionalidad, extrayendo tendencia y primer armónico.</li>
+                        <li>Ajustar modelos AR individuales a un panel vs. Ajustar un VAR a los scores PCA. Comparar el Error Out-of-Sample.</li>
+                    </ol>
+                </div>
+                <aside class="notes">
+                    Nota del presentador: Asigna tiempos y recursos para el taller. Asegúrate de proporcionar plantillas vacías en Google Colab/Jupyter.
+                </aside>
+            </section>
+
+            <!-- Slide 17 — Recursos -->
+            <section>
+                <h2>Recursos y Lecturas</h2>
+                <ul style="line-height: 1.8; text-align: left; margin-left: 40px; font-size: 0.9em; color: #34495e;">
+                    <li><strong>I. T. Jolliffe</strong> — <em>Principal Component Analysis</em> (Springer Series in Statistics).</li>
+                    <li><strong>Hyndman & Athanasopoulos</strong> — <em>Forecasting: Principles and Practice</em>.</li>
+                    <li><strong>Forni, Hallin, Lippi, Reichlin (2000)</strong> — <em>The Generalized Dynamic-Factor Model</em> (Macroeconometría).</li>
+                    <li>Guías oficiales de <a href="#" style="color: #3498db;"><code>Scikit-Learn</code></a> y <a href="#" style="color: #3498db;"><code>Statsmodels</code></a>.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Proveer estos enlaces en el material asíncrono para quienes realicen proyectos de fin de curso.
+                </aside>
+            </section>
+
+            <!-- Slide 18 — Resumen / Conclusiones -->
+            <section>
+                <div class="takeaway" style="margin-top: 0; margin-bottom: 30px; border-color: #3498db; background: #e8f4f8; color: #1f618d;">
+                    <strong>En Resumen:</strong> PCA extrae las señales dominantes de paneles ruidosos, simplificando la tarea del forecasting.
+                </div>
+                <ul class="custom-list" style="font-size: 1.1em; line-height: 1.8;">
+                    <li>Pipeline: Reducir (Scores) $\to$ Modelar (AR/VAR) $\to$ Reconstruir.</li>
+                    <li>Elegir la variante (Clásica, SSA, DFM) basada en los supuestos de la dinámica temporal.</li>
+                    <li>El centrado y escalado dictan completamente la geometría resultante de la descomposición SVD.</li>
+                </ul>
+                <aside class="notes">
+                    Nota del presentador: Cierra enfatizando que un buen preprocesamiento es el 80% del éxito al aplicar PCA en análisis de tiempo.
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Core JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    
+    <!-- Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/math/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+
+    <!-- Initialization -->
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: false, // Prevent SecurityError in restricted iframes
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+            
+            // Plugins: Highlight for code, Math for LaTeX, Notes for speaker notes
+            plugins: [ RevealHighlight, RevealMath.KaTeX, RevealNotes ]
+        });
+    </script>
+
+</body>
+</html>
