@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -76,7 +75,7 @@
 
         /* Code adjustments */
         .reveal pre { width: 100%; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        .reveal pre code { max-height: 500px; font-size: 1.0em; line-height: 1.3; }
+        .reveal pre code { max-height: 460px; font-size: 0.92em; line-height: 1.25; }
     </style>
 </head>
 <body>
@@ -95,13 +94,23 @@
             <!-- Slide 2: Repaso Estacionariedad -->
             <section>
                 <h2>1. Fase de Repaso</h2>
-                <h4 style="color: #f8fafc; margin-bottom: 30px;">El Espacio de los Procesos Estacionarios</h4>
+                <h4 style="color: #f8fafc; margin-bottom: 24px;">El Operador de Rezago</h4>
                 <div style="text-align: left;">
                     <p>El formalismo de Box-Jenkins se basa en el <strong>Operador de Rezago ($B$)</strong>, definido como:</p>
                     <div class="math-box">
                         $$B y_t = y_{t-1}$$
                     </div>
-                    <p>A partir de este operador, construimos los procesos fundamentales:</p>
+                    <p>Este operador permite escribir modelos dinámicos de forma compacta y algebraicamente manejable.</p>
+                    <p>Con él definimos diferencias, polinomios autorregresivos y estructuras estacionales en una sola notación.</p>
+                </div>
+            </section>
+
+            <!-- Slide 3: Procesos Fundamentales -->
+            <section>
+                <h2>1. Fase de Repaso</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 24px;">Procesos Fundamentales</h4>
+                <div style="text-align: left;">
+                    <p>A partir del operador $B$, construimos los procesos fundamentales:</p>
                     <ul class="custom-list">
                         <li><span class="highlight-text">AR(p):</span> $\phi_p(B)y_t = \varepsilon_t$. Raíces de $\phi(z)=0$ deben estar fuera del círculo unitario para asegurar estacionariedad.</li>
                         <li><span class="highlight-text">MA(q):</span> $y_t = \theta_q(B)\varepsilon_t$. Siempre estacionarios, requieren invertibilidad para representarse como AR($\infty$).</li>
@@ -110,27 +119,32 @@
                 </div>
             </section>
 
-            <!-- Slide 3: ARIMA -->
+            <!-- Slide 4: ARIMA I -->
             <section>
                 <h2>2. Modelos ARIMA</h2>
                 <h4 style="color: #f8fafc; margin-bottom: 20px;">Integración y Homogeneidad</h4>
-                <div class="two-column">
-                    <div>
-                        <p>Cuando la serie <span class="accent">no es estacionaria en media</span> (presenta tendencia), introducimos el operador de diferencia $\nabla = (1-B)$.</p>
-                        <p>Definición formal de un <strong>ARIMA(p,d,q)</strong>:</p>
-                        <div class="math-box">
-                            $$\phi_p(B)\nabla^d y_t = \theta_q(B)\varepsilon_t$$
-                        </div>
+                <div style="text-align: left;">
+                    <p>Cuando la serie <span class="accent">no es estacionaria en media</span> y presenta tendencia, introducimos el operador de diferencia $\nabla = (1-B)$.</p>
+                    <p>Definición formal de un <strong>ARIMA(p,d,q)</strong>:</p>
+                    <div class="math-box">
+                        $$\phi_p(B)\nabla^d y_t = \theta_q(B)\varepsilon_t$$
                     </div>
-                    <div>
-                        <h4 style="color: #38bdf8;"><i class="fa-solid fa-lightbulb" style="color: #fbbc04;"></i> Intuición</h4>
-                        <p>El parámetro <span class="highlight-text">$d$</span> representa cuántas <em>"derivadas discretas"</em> aplicamos hasta que el proceso se vuelve estacionario.</p>
-                        <p>Típicamente $d \in \{0, 1, 2\}$. Si diferenciamos demasiado, inducimos sobrediferenciación y ruido artificial.</p>
-                    </div>
+                    <p>La idea central es modelar una serie transformada que sí cumpla los supuestos de estacionariedad.</p>
                 </div>
             </section>
 
-            <!-- Slide 4: SARIMA -->
+            <!-- Slide 5: ARIMA II -->
+            <section>
+                <h2>2. Modelos ARIMA</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 20px;">Interpretación del Parámetro d</h4>
+                <div style="text-align: left; background: rgba(255, 255, 255, 0.05); padding: 24px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p><i class="fa-solid fa-lightbulb" style="color: #fbbc04; margin-right: 10px;"></i> El parámetro <span class="highlight-text">$d$</span> representa cuántas <em>"derivadas discretas"</em> aplicamos hasta que el proceso se vuelve estacionario.</p>
+                    <p>Típicamente $d \in \{0, 1, 2\}$. Si diferenciamos demasiado, inducimos sobrediferenciación y ruido artificial.</p>
+                    <p>En la práctica, el menor valor de $d$ que estabiliza la media suele ser la mejor elección.</p>
+                </div>
+            </section>
+
+            <!-- Slide 6: SARIMA -->
             <section>
                 <h2>3. Modelos SARIMA</h2>
                 <h4 style="color: #f8fafc; margin-bottom: 20px;">La Dimensión Estacional</h4>
@@ -146,108 +160,141 @@
                 </div>
             </section>
 
-            <!-- Slide 5: Metodología Box-Jenkins -->
+            <!-- Slide 7: Metodología Box-Jenkins I -->
             <section>
                 <h2>4. Metodología Box-Jenkins</h2>
-                <h4 style="color: #f8fafc; margin-bottom: 30px;">El Ciclo Iterativo</h4>
-                <div class="two-column" style="font-size: 0.9em;">
-                    <div>
-                        <h4 style="color: #38bdf8;">1. Identificación</h4>
-                        <ul>
-                            <li>Estabilizar varianza (Log o Box-Cox).</li>
-                            <li>Determinar $d$ y $D$ vía <span class="accent">Test ADF (Dickey-Fuller)</span>.</li>
-                            <li>Analizar ACF/PACF para $p,q,P,Q$.</li>
-                        </ul>
-                        <h4 style="color: #38bdf8; margin-top: 20px;">2. Estimación</h4>
-                        <ul>
-                            <li>Ajustar coeficientes mediante MLE (Máxima Verosimilitud) o Mínimos Cuadrados No Lineales.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: #38bdf8;">3. Diagnóstico</h4>
-                        <ul>
-                            <li>Residuales $\hat{\varepsilon}_t$ deben ser <strong>ruido blanco</strong>.</li>
-                            <li><span class="accent">Test Ljung-Box:</span> $H_0$: Los residuales son independientes.</li>
-                        </ul>
-                        <h4 style="color: #38bdf8; margin-top: 20px;">4. Forecasting</h4>
-                        <ul>
-                            <li>Predicciones de Mínimo Error Cuadrático Medio (MMSE).</li>
-                            <li>Generación de intervalos de confianza.</li>
-                        </ul>
-                    </div>
+                <h4 style="color: #f8fafc; margin-bottom: 24px;">Fases 1 y 2: Identificación y Estimación</h4>
+                <div style="text-align: left; font-size: 0.86em; background: rgba(255,255,255,0.05); padding: 18px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h4 style="color: #38bdf8;">1. Identificación</h4>
+                    <ul>
+                        <li>Estabilizar varianza con logaritmo o Box-Cox.</li>
+                        <li>Determinar $d$ y $D$ con apoyo del test ADF.</li>
+                        <li>Analizar ACF y PACF para inferir $p,q,P,Q$.</li>
+                    </ul>
+                    <h4 style="color: #38bdf8; margin-top: 20px;">2. Estimación</h4>
+                    <ul>
+                        <li>Ajustar coeficientes mediante máxima verosimilitud o mínimos cuadrados no lineales.</li>
+                    </ul>
+                    <p style="margin-top: 15px;">Objetivo: proponer un modelo plausible y cuantificar sus parámetros con la mejor evidencia disponible.</p>
                 </div>
             </section>
 
-            <!-- Slide 6: Workshop Python (Diag) -->
+            <!-- Slide 8: Metodología Box-Jenkins II -->
             <section>
-                <h2>5. Implementación en Python</h2>
-                <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 1: Diagnóstico de Estacionariedad</h4>
-                <pre><code class="python" data-trim data-noescape data-line-numbers="1-4|6-7|9-14|16-20|22-26">
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-
-# Cargar datos (ejemplo Serie G de Box-Jenkins)
-data = pd.read_csv('airline_passengers.csv', index_col='Month', parse_dates=True)
-
-# 1. Función de Test ADF
-def check_stationarity(series):
-    result = adfuller(series)
-    print(f'ADF Statistic: {result[0]:.4f}')
-    print(f'p-value: {result[1]:.4f}') # Si p < 0.05, es estacionaria
-
-# Aplicar log y diferencia estacional (s=12) para remover tendencia/estacionalidad
-data['log_passengers'] = np.log(data['Passengers'])
-data['diff_seasonal'] = data['log_passengers'].diff(12).dropna()
-
-check_stationarity(data['diff_seasonal'])
-
-# 2. Identificación visual (ACF / PACF)
-fig, ax = plt.subplots(1, 2, figsize=(12, 4))
-plot_acf(data['diff_seasonal'], ax=ax[0], lags=40)
-plot_pacf(data['diff_seasonal'], ax=ax[1], lags=40)
-plt.show()
-                </code></pre>
+                <h2>4. Metodología Box-Jenkins</h2>
+                <h4 style="color: #f8fafc; margin-bottom: 24px;">Fases 3 y 4: Diagnóstico y Forecasting</h4>
+                <div style="text-align: left; font-size: 0.9em; background: rgba(255,255,255,0.05); padding: 24px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h4 style="color: #38bdf8;">3. Diagnóstico</h4>
+                    <ul>
+                        <li>Los residuales $\hat{\varepsilon}_t$ deben comportarse como <strong>ruido blanco</strong>.</li>
+                        <li>El test Ljung-Box contrasta $H_0$: independencia de residuales.</li>
+                    </ul>
+                    <h4 style="color: #38bdf8; margin-top: 20px;">4. Forecasting</h4>
+                    <ul>
+                        <li>Se generan predicciones MMSE e intervalos de confianza.</li>
+                        <li>Si los residuales conservan estructura, se regresa a la fase de identificación.</li>
+                    </ul>
+                </div>
             </section>
 
-            <!-- Slide 7: Workshop Python (Ajuste) -->
-            <section>
-                <h2>5. Implementación en Python</h2>
-                <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 2: Ajuste SARIMA y Diagnóstico</h4>
-                <pre><code class="python" data-trim data-noescape data-line-numbers="1-2|4-8|10-15|17-20">
-from statsmodels.tsa.statespace.sarimax import SARIMAX
+            <!-- Slide 9: Workshop Python (Diag I) -->
+                <section>
+                    <h2>5. Implementación en Python</h2>
+                    <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 1A: Carga y Test de Estacionariedad</h4>
+                    <pre><code class="python" data-trim data-noescape data-line-numbers="1-5|7-8|10-14|16-18">
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from statsmodels.tsa.stattools import adfuller
+    from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
-# Ajuste del modelo SARIMA(0,1,1)(0,1,1)12 (Modelo clásico 'Airline')
-model = SARIMAX(data['log_passengers'], 
-                order=(0, 1, 1), 
-                seasonal_order=(0, 1, 1, 12))
-results = model.fit()
+    # Cargar datos (ejemplo Serie G de Box-Jenkins)
+    data = pd.read_csv('airline_passengers.csv', index_col='Month', parse_dates=True)
 
-# Resumen estadístico (AIC, BIC, Coeficientes, Ljung-Box)
-print(results.summary())
+    # 1. Función de Test ADF
+    def check_stationarity(series):
+        result = adfuller(series)
+        print(f'ADF Statistic: {result[0]:.4f}')
+        print(f'p-value: {result[1]:.4f}')  # Si p < 0.05, es estacionaria
 
-# Diagnóstico visual de residuales (Normalidad, ACF residual)
-results.plot_diagnostics(figsize=(15, 12))
-plt.show()
+    data['log_passengers'] = np.log(data['Passengers'])
+    data['diff_seasonal'] = data['log_passengers'].diff(12).dropna()
+    check_stationarity(data['diff_seasonal'])
+                    </code></pre>
+                </section>
 
-# Pronóstico MMSE (Próximos 12 meses)
-forecast = results.get_forecast(steps=12)
-forecast_df = forecast.summary_frame() # Incluye IC al 95%
-print(forecast_df)
-                </code></pre>
-            </section>
+                <!-- Slide 10: Workshop Python (Diag II) -->
+                <section>
+                    <h2>5. Implementación en Python</h2>
+                    <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 1B: Identificación Visual con ACF/PACF</h4>
+                    <pre><code class="python" data-trim data-noescape data-line-numbers="1-4|6-8|10-11">
+    # Serie transformada tras log y diferencia estacional
+    series = data['diff_seasonal'].dropna()
 
-            <!-- Slide 8: Reto Final -->
+    # 2. Identificación visual (ACF / PACF)
+    fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+    plot_acf(series, ax=ax[0], lags=40)
+    plot_pacf(series, ax=ax[1], lags=40)
+
+    ax[0].set_title('ACF de la serie diferenciada')
+    ax[1].set_title('PACF de la serie diferenciada')
+    plt.tight_layout()
+    plt.show()
+                    </code></pre>
+                </section>
+
+                <!-- Slide 11: Workshop Python (Ajuste I) -->
+                <section>
+                    <h2>5. Implementación en Python</h2>
+                    <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 2A: Ajuste del Modelo SARIMA</h4>
+                    <pre><code class="python" data-trim data-noescape data-line-numbers="1|3-7|9-10">
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+    # Ajuste del modelo SARIMA(0,1,1)(0,1,1)12 (modelo clásico "Airline")
+    model = SARIMAX(data['log_passengers'],
+                    order=(0, 1, 1),
+                    seasonal_order=(0, 1, 1, 12))
+    results = model.fit()
+
+    # Resumen estadístico (AIC, BIC, coeficientes, Ljung-Box)
+    print(results.summary())
+                    </code></pre>
+                </section>
+
+                <!-- Slide 12: Workshop Python (Ajuste II) -->
+                <section>
+                    <h2>5. Implementación en Python</h2>
+                    <h4 style="color: #f8fafc; margin-bottom: 20px;">Script 2B: Diagnóstico y Pronóstico</h4>
+                    <pre><code class="python" data-trim data-noescape data-line-numbers="1-3|5-7|9-11">
+    # Diagnóstico visual de residuales (normalidad y ACF residual)
+    results.plot_diagnostics(figsize=(15, 12))
+    plt.show()
+
+    # Pronóstico MMSE (próximos 12 meses)
+    forecast = results.get_forecast(steps=12)
+    forecast_df = forecast.summary_frame()  # Incluye IC al 95%
+
+    print(forecast_df[['mean', 'mean_ci_lower', 'mean_ci_upper']])
+                    </code></pre>
+                </section>
+
+                <!-- Slide 13: Reto Final -->
             <section>
                 <h2><i class="fa-solid fa-flag-checkered" style="color: #a78bfa; margin-right: 15px;"></i>Reto para los Alumnos</h2>
                 <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 30px; text-align: left;">
-                    <p style="font-size: 1.1em; color: #f8fafc;">Utilicen los Criterios de Información <span class="highlight-text">AIC y BIC</span> para comparar matemáticamente el modelo SARIMA contra un modelo puramente autorregresivo <code>ARIMA(1,1,1)</code> sin componente estacional.</p>
-                    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
-                    <p><i class="fa-solid fa-brain" style="color: #38bdf8; margin-right: 10px;"></i> <strong>Discusión:</strong> Justifiquen por qué el principio de la <span class="accent">Parsimonia</span> (penalización por añadir parámetros extra) es vital para evitar el sobreajuste al pronosticar el futuro.</p>
+                        <p style="font-size: 1.1em; color: #f8fafc;">Utilicen los Criterios de Información <span class="highlight-text">AIC y BIC</span> para comparar matemáticamente el modelo SARIMA contra un modelo puramente autorregresivo <code>ARIMA(1,1,1)</code> sin componente estacional.</p>
                 </div>
-                <h4 style="color: #38bdf8; margin-top: 40px; font-style: italic;">¡Vamos a transformar esos datos ruidosos en señales deterministas!</h4>
+                    <h4 style="color: #38bdf8; margin-top: 36px; font-style: italic;">Contrasten ajuste contra complejidad del modelo.</h4>
+                </section>
+
+                <!-- Slide 14: Discusión Final -->
+                <section>
+                    <h2><i class="fa-solid fa-brain" style="color: #38bdf8; margin-right: 15px;"></i>Discusión Final</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 30px; text-align: left;">
+                        <p><strong>Pregunta guía:</strong> ¿Por qué el principio de la <span class="accent">parsimonia</span> es vital para evitar el sobreajuste al pronosticar el futuro?</p>
+                        <p>Relacionen la penalización por parámetros extra con la capacidad real de generalización fuera de muestra.</p>
+                    </div>
+                    <h4 style="color: #38bdf8; margin-top: 36px; font-style: italic;">Un buen pronóstico no solo ajusta el pasado: también sobrevive al futuro.</h4>
             </section>
 
         </div>
@@ -276,6 +323,3 @@ print(forecast_df)
 
 </body>
 </html>
-
-
-```
