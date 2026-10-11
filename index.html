@@ -388,5 +388,15 @@
         </div>
     </footer>
 
+    <script>
+        if (window.location.protocol === "file:") {
+            window.addEventListener("DOMContentLoaded", () => {
+                const warn = document.createElement("div");
+                warn.style.cssText = "position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:99999;background:#DC322F;color:#FFF;padding:14px 22px;border-radius:8px;font-family:sans-serif;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,0.3);text-align:center;max-width:680px;line-height:1.5;";
+                warn.innerHTML = "<strong>⚠️ Estás abriendo el sitio directamente con <code>file://</code></strong><br>Para que las presentaciones Reveal.js puedan cargar los archivos Markdown y los enlaces interactivos funcionen al 100%, inicia el servidor HTTP local:<br><code style='background:#073642;color:#EEE8D5;padding:4px 8px;border-radius:4px;font-weight:bold;'>python3 -m http.server 8000</code> y entra a <a href='http://localhost:8000' style='color:#FDF6E3;text-decoration:underline;font-weight:bold;'>http://localhost:8000</a>";
+                document.body.appendChild(warn);
+            });
+        }
+    </script>
 </body>
 </html>

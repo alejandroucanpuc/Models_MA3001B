@@ -298,7 +298,6 @@ plt.title("Perfil de Atención del Último Paso (TinyAttn) vs. Rezagos")
 plt.grid(True, linestyle="--", alpha=0.5)
 plt.gca().invert_xaxis()
 plt.tight_layout()
-plt.savefig("semana-04/img/atencion_rezagos.png", dpi=150)
 plt.show()
 
 print(f"Rezagos más atendidos: {rezagos[np.argsort(attn_profile)[::-1][:4]]}")
@@ -330,6 +329,7 @@ print(f"Rezagos más atendidos: {rezagos[np.argsort(attn_profile)[::-1][:4]]}")
 - **Pregunta para Semana 05:** ¿Cómo eliminamos formalmente la tendencia y estacionalidad mediante diferenciación y descomposición STL para estabilizar las predicciones?
 """))
 
+    nb.cells = cells
     with open(f"{NOTEBOOKS_DIR}/{filename}", "w", encoding="utf-8") as f:
         nbf.write(nb, f)
     print(f"Creado: {NOTEBOOKS_DIR}/{filename}")
@@ -459,7 +459,6 @@ axes[3].set_title("Residuo Irregular")
 for ax in axes:
     ax.grid(True, linestyle=":", alpha=0.6)
 plt.tight_layout()
-plt.savefig("semana-05/img/descomposicion_stl.png", dpi=150)
 plt.show()
 
 print(f"Desviación estándar del residuo aditivo clásico: {desc_add.resid.std():.4f}")
@@ -555,6 +554,7 @@ print(f"RMSE en la escala original (ppm) con LSTM sobre serie estacionarizada: {
 - **Pregunta para Semana 06:** Ahora que la serie es estacionaria, ¿cuántos rezagos tienen correlación real (parcial) con el presente y cuál es el periodo exacto del ciclo oscilatorio?
 """))
 
+    nb.cells = cells
     with open(f"{NOTEBOOKS_DIR}/{filename}", "w", encoding="utf-8") as f:
         nbf.write(nb, f)
     print(f"Creado: {NOTEBOOKS_DIR}/{filename}")
@@ -631,7 +631,6 @@ plot_pacf(dy, lags=36, method="ywm", alpha=0.05, ax=axes[1], title="PACF de la 1
 axes[0].grid(True, linestyle=":", alpha=0.6)
 axes[1].grid(True, linestyle=":", alpha=0.6)
 plt.tight_layout()
-plt.savefig("semana-06/img/acf_pacf.png", dpi=150)
 plt.show()
 
 # Picos en rezagos 12, 24 confirman la estacionalidad anual marcada
@@ -661,7 +660,6 @@ plt.title("Periodograma de Fourier (CO2 sin tendencia)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.5)
 plt.tight_layout()
-plt.savefig("semana-06/img/periodograma.png", dpi=150)
 plt.show()
 """))
 
@@ -709,7 +707,6 @@ plt.xticks(rezagos[::2])
 plt.legend()
 plt.grid(True, linestyle=":", alpha=0.6)
 plt.tight_layout()
-plt.savefig("semana-06/img/atencion_vs_pacf.png", dpi=150)
 plt.show()
 """))
 
@@ -735,6 +732,7 @@ plt.show()
 - **Pregunta para Semana 07:** ¿Cómo formulamos un modelo econométrico SARIMAX que use estos parámetros específicos ($p, d, q, s$) para generar intervalos de pronóstico al 95%?
 """))
 
+    nb.cells = cells
     with open(f"{NOTEBOOKS_DIR}/{filename}", "w", encoding="utf-8") as f:
         nbf.write(nb, f)
     print(f"Creado: {NOTEBOOKS_DIR}/{filename}")
@@ -879,7 +877,6 @@ print(mejor_sarima.summary().tables[1])
 # Diagnóstico de residuos
 fig = mejor_sarima.plot_diagnostics(figsize=(10, 6))
 plt.tight_layout()
-plt.savefig("semana-07/img/sarima_diagnosticos.png", dpi=150)
 plt.show()
 
 # Prueba formal de Ljung-Box sobre los residuos
@@ -904,7 +901,6 @@ plt.ylabel("CO2 (ppm)")
 plt.legend()
 plt.grid(True, linestyle=":", alpha=0.6)
 plt.tight_layout()
-plt.savefig("semana-07/img/sarima_forecast.png", dpi=150)
 plt.show()
 
 mae_sarima = np.mean(np.abs(test_s.values - fc_frame["mean"].values))
@@ -936,6 +932,7 @@ print(f"RMSE SARIMA: {rmse_sarima:.4f} ppm")
 - **Pregunta para Semana 08:** Si necesitamos un pronóstico actualizable en milisegundos con cada nueva observación, ¿cómo compite el suavizado exponencial (Holt-Winters) y quién triunfa en el benchmark integrador final?
 """))
 
+    nb.cells = cells
     with open(f"{NOTEBOOKS_DIR}/{filename}", "w", encoding="utf-8") as f:
         nbf.write(nb, f)
     print(f"Creado: {NOTEBOOKS_DIR}/{filename}")
@@ -1162,7 +1159,6 @@ plt.ylabel("CO2 (ppm)")
 plt.legend()
 plt.grid(True, linestyle=":", alpha=0.6)
 plt.tight_layout()
-plt.savefig("semana-08/img/benchmark_forecasts.png", dpi=150)
 plt.show()
 """))
 
@@ -1189,6 +1185,7 @@ plt.show()
 - **Conclusión 2:** El rol del científico de datos no es aplicar el modelo más complejo por defecto, sino contrastar de forma empírica y reproducible el desempeño frente a baselines sólidos.
 """))
 
+    nb.cells = cells
     with open(f"{NOTEBOOKS_DIR}/{filename}", "w", encoding="utf-8") as f:
         nbf.write(nb, f)
     print(f"Creado: {NOTEBOOKS_DIR}/{filename}")

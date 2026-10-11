@@ -53,6 +53,24 @@ Durante la implementación y ejecución automatizada de los 5 notebooks (`N1` a 
 - **Ajuste aplicado:**  
   Para asegurar que los notebooks corran en CPU en cualquier entorno estándar (y en Google Colab) en menos de 2 minutos, se calibraron las épocas de entrenamiento a 25–40 épocas y se fijaron 5 orígenes en la validación móvil de la Semana 8.
 
+### 1.7 Corrección en Serialización de Celdas de Notebooks (`nb.cells`)
+- **Problema detectado:**  
+  En el script generador `generate_all_notebooks.py`, las celdas se acumulaban en la lista `cells` pero no se asignaban al atributo `nb.cells` del objeto notebook antes de escribir con `nbf.write()`, lo que provocó que los archivos `.ipynb` iniciales tuvieran únicamente 72 bytes con lista de celdas vacía `[]`.
+- **Ajuste aplicado:**  
+  Se añadió la asignación explícita `nb.cells = cells` en las 5 funciones constructoras (`create_n1` a `create_n5`). Los archivos `.ipynb` ahora pesan entre 12 KB y 16 KB con contenido completo.
+
+### 1.8 Desacoplamiento de Rutas de Guardado (`plt.savefig`)
+- **Problema detectado:**  
+  Al ejecutarse con `nbconvert`, el directorio de trabajo del kernel es `notebooks/`. Llamadas relativas a `semana-NN/img/` fallaban con `FileNotFoundError`.
+- **Ajuste aplicado:**  
+  Se retiraron las llamadas de guardado a disco dentro de las celdas del notebook, apoyándose en la visualización interactiva `plt.show()` que genera los gráficos embebidos directamente en el HTML.
+
+### 1.9 Detección de Protocolo Local `file://` en Diapositivas
+- **Problema detectado:**  
+  Si un usuario abre `semana-NN/index.html` haciendo doble clic desde el explorador de archivos (`file://`), los navegadores bloquean la lectura de `slides.md` por restricciones de seguridad (CORS), mostrando una presentación en blanco.
+- **Ajuste aplicado:**  
+  Se integró un script de detección de protocolo en la portada y en las 5 presentaciones que muestra un banner flotante con las instrucciones exactas para iniciar el servidor local `python3 -m http.server 8000`.
+
 ---
 
 ## 2. Registro de Archivos y Recursos Generados
