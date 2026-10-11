@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>MA3001B - Semana 07: Atípicos, AR, ARIMA/SARIMA y AIC/BIC</title>
+
+	<link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+	<link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+	<link rel="stylesheet" href="../assets/reveal/dist/theme/solarized.css">
+	<link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+	<link rel="stylesheet" href="../assets/reveal/katex/katex.min.css">
+	<link rel="stylesheet" href="../assets/css/theme-ucan.css">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-markdown="slides.md"
+			         data-separator="^\n---\n"
+			         data-separator-vertical="^\n--\n"
+			         data-separator-notes="^Note:">
+			</section>
+		</div>
+	</div>
+
+	<!-- Barra de navegación fija / botón volver -->
+	<div style="position: fixed; bottom: 12px; left: 16px; z-index: 99; font-family: Inter, sans-serif;">
+		<a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(238, 232, 213, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(181, 137, 0, 0.3); border-radius: 6px; font-size: 12px; font-weight: 600; color: #073642; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.06); transition: all 0.2s ease;">
+			<i class="fa-solid fa-arrow-left" style="color: #CB4B16;"></i> Portada MA3001B
+		</a>
+	</div>
+
+	<script src="../assets/reveal/dist/reveal.js"></script>
+	<script src="../assets/reveal/plugin/markdown/markdown.js"></script>
+	<script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+	<script src="../assets/reveal/plugin/notes/notes.js"></script>
+	<script src="../assets/reveal/plugin/math/math.js"></script>
+	<script src="../assets/reveal/plugin/search/search.js"></script>
+	<script src="../assets/reveal/plugin/zoom/zoom.js"></script>
+	<script>
+		Reveal.initialize({
+			hash: true,
+			slideNumber: "c/t",
+			controls: true,
+			progress: true,
+			center: false,
+			transition: "slide",
+			katex: {
+				local: "../assets/reveal/katex"
+			},
+			plugins: [
+				RevealMarkdown,
+				RevealHighlight,
+				RevealNotes,
+				RevealMath.KaTeX,
+				RevealSearch,
+				RevealZoom
+			]
+		});
+	</script>
+</body>
+</html>

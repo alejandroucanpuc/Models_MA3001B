@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   MA3001B / MA2007B Custom Reveal.js Solarized Academic Theme
+   Matches https://alejandroucanpuc.github.io/MA2007B/
+   Designed for Alejandro Ucan-Puc - Tecnologico de Monterrey
+   ========================================================================== */
+
+:root {
+  --bg-color: #FDF6E3;
+  --text-color: #4B473F;
+  --heading-color: #073642;
+  --accent-amber: #B58900;
+  --accent-orange: #CB4B16;
+  --accent-magenta: #D33682;
+  --accent-violet: #6C71C4;
+  --accent-blue: #268BD2;
+  --accent-teal: #2AA198;
+  --accent-green: #859900;
+  --card-bg: rgba(238, 232, 213, 0.6);
+  --box-border: rgba(181, 137, 0, 0.3);
+}
+
+.reveal-viewport {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color);
+}
+
+.reveal {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text-color);
+}
+
+/* Headings */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  font-family: 'Crimson Text', Georgia, serif !important;
+  color: var(--heading-color) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.reveal h1 { 
+  font-size: 2.2em; 
+  color: var(--heading-color) !important; 
+  margin-bottom: 0.3em;
+}
+
+.reveal h2 { 
+  font-size: 1.6em; 
+  color: var(--accent-orange) !important; 
+  border-bottom: 2px solid rgba(203, 75, 22, 0.25); 
+  padding-bottom: 8px; 
+  margin-bottom: 20px;
+}
+
+.reveal h3 { 
+  font-size: 1.25em; 
+  color: var(--accent-amber) !important; 
+  margin-bottom: 12px;
+}
+
+.reveal h4 { 
+  font-size: 1.05em; 
+  color: var(--accent-teal) !important; 
+}
+
+/* Links */
+.reveal a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.reveal a:hover {
+  color: var(--accent-orange);
+  text-decoration: underline;
+}
+
+/* Layout Containers & Boxes */
+.container {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 15px;
+  text-align: left;
+}
+
+.col {
+  flex: 1;
+  padding: 14px 18px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid rgba(181, 137, 0, 0.15);
+}
+
+.col-2 {
+  flex: 2;
+}
+
+.highlight-box {
+  background: var(--card-bg);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-amber);
+  text-align: left;
+  margin: 15px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.def-box {
+  background: rgba(42, 161, 152, 0.09);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-teal);
+  text-align: left;
+  margin: 15px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.ex-box {
+  background: rgba(181, 137, 0, 0.09);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-amber);
+  text-align: left;
+  margin: 15px 0;
+}
+
+.alert-box {
+  background: rgba(220, 50, 47, 0.09);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-red);
+  text-align: left;
+  margin: 15px 0;
+}
+
+.success-box {
+  background: rgba(133, 153, 0, 0.09);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-green);
+  text-align: left;
+  margin: 15px 0;
+}
+
+.tagline {
+  color: var(--accent-violet);
+  font-size: 0.75em;
+  margin-top: 20px;
+  font-family: 'Crimson Text', Georgia, serif;
+  font-style: italic;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.65em;
+  font-family: 'Fira Code', monospace;
+  font-weight: 600;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.badge-orange {
+  background: rgba(203, 75, 22, 0.12);
+  color: var(--accent-orange);
+  border: 1px solid rgba(203, 75, 22, 0.3);
+}
+
+.badge-teal {
+  background: rgba(42, 161, 152, 0.12);
+  color: var(--accent-teal);
+  border: 1px solid rgba(42, 161, 152, 0.3);
+}
+
+.badge-amber {
+  background: rgba(181, 137, 0, 0.12);
+  color: var(--accent-amber);
+  border: 1px solid rgba(181, 137, 0, 0.3);
+}
+
+.time-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65em;
+  color: var(--accent-violet);
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  background: rgba(108, 113, 196, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Lists */
+.reveal ul, .reveal ol {
+  text-align: left;
+  margin-left: 1.2em;
+  line-height: 1.45;
+  font-size: 0.88em;
+}
+
+.reveal li {
+  margin-bottom: 0.4em;
+}
+
+/* Code & Pre */
+.reveal pre {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border-radius: 8px;
+  background: #EEE8D5;
+  border: 1px solid rgba(181, 137, 0, 0.25);
+  margin: 12px 0;
+  width: 100%;
+}
+
+.reveal pre code {
+  font-family: 'Fira Code', monospace !important;
+  font-size: 0.72em;
+  line-height: 1.35;
+  color: #073642;
+  padding: 12px 16px;
+}
+
+/* Slide background accents */
+.title-slide {
+  background: linear-gradient(135deg, #FDF6E3 0%, #EEE8D5 100%) !important;
+}
+
+/* Reveal Controls & Progress in Solarized Orange */
+.reveal .controls {
+  color: var(--accent-orange) !important;
+}
+
+.reveal .progress {
+  color: var(--accent-orange) !important;
+  height: 4px;
+}
+
+.reveal .slide-number {
+  color: #586E75 !important;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  background: transparent !important;
+}

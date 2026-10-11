@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA3001B: Modelos y TDA | Alejandro Ucan-Puc</title>
+    <meta name="description" content="Módulo de Modelos y TDA (Profesor B): Redes Secuenciales, Transformers y Series de Tiempo. Diapositivas en Reveal.js y tutoriales prácticos en Python. Tecnológico de Monterrey.">
+
+    <!-- Google Fonts: Crimson Text, Inter, Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        solar: {
+                            base3: '#FDF6E3',
+                            base2: '#EEE8D5',
+                            base1: '#93A1A1',
+                            base0: '#839496',
+                            base00: '#657B83',
+                            base01: '#586E75',
+                            base02: '#073642',
+                            yellow: '#B58900',
+                            orange: '#CB4B16',
+                            red: '#DC322F',
+                            magenta: '#D33682',
+                            violet: '#6C71C4',
+                            blue: '#268BD2',
+                            cyan: '#2AA198',
+                            green: '#859900'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Crimson Text', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            background-color: #FDF6E3;
+            color: #4B473F;
+        }
+        .card-solar {
+            background: rgba(238, 232, 213, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(181, 137, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card-solar:hover {
+            transform: translateY(-4px);
+            border-color: #CB4B16;
+            box-shadow: 0 10px 25px rgba(7, 54, 66, 0.08);
+        }
+        .solar-gradient-btn {
+            background: linear-gradient(135deg, #B58900 0%, #CB4B16 100%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Banner -->
+    <header class="relative py-14 px-6 border-b border-solar-base2 bg-solar-base3">
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1 mb-4 text-xs font-mono font-semibold tracking-wider text-solar-orange uppercase bg-solar-orange/10 border border-solar-orange/30 rounded-full">
+                Tecnológico de Monterrey • MA3001B • 8vo Semestre
+            </div>
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-solar-base02 mb-4">
+                Modelos y TDA: <span class="text-solar-orange">Redes Secuenciales y Series de Tiempo</span>
+            </h1>
+            <p class="text-lg md:text-xl font-serif italic text-solar-base01 max-w-3xl mx-auto mb-8 leading-relaxed">
+                Módulo Profesor B del curso <em>Desarrollo de Proyectos de Ingeniería de Matemáticas</em>. Diapositivas interactivas en Reveal.js y tutoriales prácticos en Python (PyTorch, statsmodels, SciPy, scikit-learn).
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-4">
+                <a href="#sesiones" class="px-7 py-3 rounded-lg solar-gradient-btn font-medium text-white shadow hover:opacity-95 transition-all text-sm">
+                    <i class="fa-solid fa-chalkboard-user mr-2"></i>Ver 5 Sesiones
+                </a>
+                <a href="#notebooks" class="px-7 py-3 rounded-lg border border-solar-base01 text-solar-base02 font-medium hover:bg-solar-base2 transition-all text-sm">
+                    <i class="fa-brands fa-python mr-2"></i>5 Tutoriales Python
+                </a>
+                <a href="https://alejandroucanpuc.github.io/" target="_blank" rel="noopener noreferrer" class="px-7 py-3 rounded-lg border border-solar-base01 text-solar-base02 font-medium hover:bg-solar-base2 transition-all text-sm">
+                    <i class="fa-solid fa-globe mr-2"></i>Prof. Alejandro Ucan-Puc
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto py-14 px-6 flex-grow space-y-16">
+
+        <!-- Section 1: Diapositivas Teóricas (Semanas 4 a 8) -->
+        <section id="sesiones">
+            <div class="flex items-center justify-between mb-8 border-b border-solar-base2 pb-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-solar-base02">Diapositivas Teóricas</h2>
+                    <p class="text-xs text-solar-base01 font-mono mt-1">MA3001B • 5 Sesiones en Reveal.js (Editables en Markdown)</p>
+                </div>
+                <span class="text-solar-orange font-mono text-xs font-semibold px-3 py-1 bg-solar-orange/10 rounded-full border border-solar-orange/20">
+                    5 Semanas Disponibles
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Semana 04 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-orange/15 text-solar-orange rounded flex items-center justify-center font-mono font-bold text-xs">04</span>
+                            <span class="text-[10px] font-mono text-solar-orange font-semibold uppercase px-2 py-0.5 bg-solar-orange/10 rounded">Deep Learning</span>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold text-solar-base02 mb-1">Redes Secuenciales y Transformers</h3>
+                        <p class="text-solar-base01 text-xs mb-4">RNN, GRU, LSTM, mecanismo de auto-atención (Q, K, V) y comparación de gradiente desvaneciente frente a un baseline ingenuo.</p>
+                    </div>
+                    <a href="semana-04/index.html" class="p-2 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-orange hover:text-white transition-colors text-xs font-medium flex justify-between items-center">
+                        <span>Ver Presentación</span><i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Semana 05 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-cyan/15 text-solar-cyan rounded flex items-center justify-center font-mono font-bold text-xs">05</span>
+                            <span class="text-[10px] font-mono text-solar-cyan font-semibold uppercase px-2 py-0.5 bg-solar-cyan/10 rounded">Estacionariedad</span>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold text-solar-base02 mb-1">Procesos Estocásticos y Descomposición</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Pruebas ADF y KPSS cruzadas, diferenciación, transformaciones Box-Cox y descomposición de series (aditiva, multiplicativa y STL robusto).</p>
+                    </div>
+                    <a href="semana-05/index.html" class="p-2 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-cyan hover:text-white transition-colors text-xs font-medium flex justify-between items-center">
+                        <span>Ver Presentación</span><i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Semana 06 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-yellow/15 text-solar-yellow rounded flex items-center justify-center font-mono font-bold text-xs">06</span>
+                            <span class="text-[10px] font-mono text-solar-yellow font-semibold uppercase px-2 py-0.5 bg-solar-yellow/10 rounded">Dinámica</span>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold text-solar-base02 mb-1">ACF, PACF, CCF y Análisis Espectral</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Identificación de rezagos significativos, correlación cruzada con series exógenas líderes, transformada de Fourier y periodograma Welch.</p>
+                    </div>
+                    <a href="semana-06/index.html" class="p-2 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-yellow hover:text-white transition-colors text-xs font-medium flex justify-between items-center">
+                        <span>Ver Presentación</span><i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Semana 07 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-blue/15 text-solar-blue rounded flex items-center justify-center font-mono font-bold text-xs">07</span>
+                            <span class="text-[10px] font-mono text-solar-blue font-semibold uppercase px-2 py-0.5 bg-solar-blue/10 rounded">Modelos</span>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold text-solar-base02 mb-1">Atípicos, AR, ARIMA/SARIMA y AIC/BIC</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Detección robusta con MAD, metodología Box-Jenkins, SARIMAX, criterios AIC/BIC, prueba Ljung-Box y pronóstico con intervalo de confianza.</p>
+                    </div>
+                    <a href="semana-07/index.html" class="p-2 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-blue hover:text-white transition-colors text-xs font-medium flex justify-between items-center">
+                        <span>Ver Presentación</span><i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Semana 08 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-green/15 text-solar-green rounded flex items-center justify-center font-mono font-bold text-xs">08</span>
+                            <span class="text-[10px] font-mono text-solar-green font-semibold uppercase px-2 py-0.5 bg-solar-green/10 rounded">Benchmark</span>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold text-solar-base02 mb-1">Suavizado Exponencial y Benchmark Integrador</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Holt-Winters amortiguado, validación cruzada con origen móvil, métrica MASE y benchmark de 5 familias de modelos para el Reto.</p>
+                    </div>
+                    <a href="semana-08/index.html" class="p-2 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-green hover:text-white transition-colors text-xs font-medium flex justify-between items-center">
+                        <span>Ver Presentación</span><i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- /grid-sesiones -->
+            </div>
+        </section>
+
+        <!-- Section 2: Tutoriales de Laboratorio en Python -->
+        <section id="notebooks">
+            <div class="flex items-center justify-between mb-8 border-b border-solar-base2 pb-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-solar-base02">Tutoriales de Laboratorio en Python</h2>
+                    <p class="text-xs text-solar-base01 font-mono mt-1">Prácticas reproducibles con datos de Mauna Loa CO₂ y serie del Reto</p>
+                </div>
+                <span class="text-solar-violet font-mono text-xs font-semibold px-3 py-1 bg-solar-violet/10 rounded-full border border-solar-violet/20">
+                    5 Notebooks Completos
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- N1 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-orange/15 text-solar-orange rounded flex items-center justify-center font-mono font-bold text-xs">N1</span>
+                            <span class="text-[10px] font-mono text-solar-base01">Semana 04</span>
+                        </div>
+                        <h3 class="text-base font-serif font-bold text-solar-base02 mb-1">Redes Secuenciales y Transformers</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Entrenamiento en PyTorch de RNN, GRU, LSTM y Transformer con atención visible vs. baseline ingenuo.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <a href="notebooks/html/N1_RedesSecuenciales_Transformers.html" class="p-2 bg-solar-orange/15 text-solar-orange rounded hover:bg-solar-orange hover:text-white transition-colors text-xs font-mono font-medium flex justify-between items-center">
+                            <span><i class="fa-solid fa-file-code mr-1"></i>Ver en HTML</span><i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="notebooks/N1_RedesSecuenciales_Transformers.ipynb" download class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-brands fa-python mr-1"></i>.ipynb
+                            </a>
+                            <a href="https://colab.research.google.com/github/alxcn/Models_MA3001B/blob/main/notebooks/N1_RedesSecuenciales_Transformers.ipynb" target="_blank" rel="noopener noreferrer" class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-solid fa-cloud mr-1"></i>Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- N2 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-cyan/15 text-solar-cyan rounded flex items-center justify-center font-mono font-bold text-xs">N2</span>
+                            <span class="text-[10px] font-mono text-solar-base01">Semana 05</span>
+                        </div>
+                        <h3 class="text-base font-serif font-bold text-solar-base02 mb-1">Estacionariedad y Descomposición</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Diagnóstico riguroso con ADF y KPSS, diferencias sucesivas, Box-Cox y descomposición clásica vs. STL.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <a href="notebooks/html/N2_Estacionariedad_Descomposicion.html" class="p-2 bg-solar-cyan/15 text-solar-cyan rounded hover:bg-solar-cyan hover:text-white transition-colors text-xs font-mono font-medium flex justify-between items-center">
+                            <span><i class="fa-solid fa-file-code mr-1"></i>Ver en HTML</span><i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="notebooks/N2_Estacionariedad_Descomposicion.ipynb" download class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-brands fa-python mr-1"></i>.ipynb
+                            </a>
+                            <a href="https://colab.research.google.com/github/alxcn/Models_MA3001B/blob/main/notebooks/N2_Estacionariedad_Descomposicion.ipynb" target="_blank" rel="noopener noreferrer" class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-solid fa-cloud mr-1"></i>Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- N3 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-yellow/15 text-solar-yellow rounded flex items-center justify-center font-mono font-bold text-xs">N3</span>
+                            <span class="text-[10px] font-mono text-solar-base01">Semana 06</span>
+                        </div>
+                        <h3 class="text-base font-serif font-bold text-solar-base02 mb-1">ACF, PACF, CCF y Espectral</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Cálculo de ACF/PACF, periodograma de Fourier, convención de signo de CCF y comparación Atención vs. PACF.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <a href="notebooks/html/N3_ACF_PACF_CCF_Espectral.html" class="p-2 bg-solar-yellow/20 text-solar-yellow rounded hover:bg-solar-yellow hover:text-white transition-colors text-xs font-mono font-medium flex justify-between items-center">
+                            <span><i class="fa-solid fa-file-code mr-1"></i>Ver en HTML</span><i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="notebooks/N3_ACF_PACF_CCF_Espectral.ipynb" download class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-brands fa-python mr-1"></i>.ipynb
+                            </a>
+                            <a href="https://colab.research.google.com/github/alxcn/Models_MA3001B/blob/main/notebooks/N3_ACF_PACF_CCF_Espectral.ipynb" target="_blank" rel="noopener noreferrer" class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-solid fa-cloud mr-1"></i>Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- N4 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-blue/15 text-solar-blue rounded flex items-center justify-center font-mono font-bold text-xs">N4</span>
+                            <span class="text-[10px] font-mono text-solar-base01">Semana 07</span>
+                        </div>
+                        <h3 class="text-base font-serif font-bold text-solar-base02 mb-1">Atípicos y ARIMA / SARIMA</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Detección de anomalías con MAD sobre residuo STL, rejilla SARIMAX, criterios AIC/BIC y validación de residuos.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <a href="notebooks/html/N4_Atipicos_ARIMA_SARIMA.html" class="p-2 bg-solar-blue/15 text-solar-blue rounded hover:bg-solar-blue hover:text-white transition-colors text-xs font-mono font-medium flex justify-between items-center">
+                            <span><i class="fa-solid fa-file-code mr-1"></i>Ver en HTML</span><i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="notebooks/N4_Atipicos_ARIMA_SARIMA.ipynb" download class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-brands fa-python mr-1"></i>.ipynb
+                            </a>
+                            <a href="https://colab.research.google.com/github/alxcn/Models_MA3001B/blob/main/notebooks/N4_Atipicos_ARIMA_SARIMA.ipynb" target="_blank" rel="noopener noreferrer" class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-solid fa-cloud mr-1"></i>Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- N5 -->
+                <div class="card-solar p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="w-8 h-8 bg-solar-green/15 text-solar-green rounded flex items-center justify-center font-mono font-bold text-xs">N5</span>
+                            <span class="text-[10px] font-mono text-solar-base01">Semana 08</span>
+                        </div>
+                        <h3 class="text-base font-serif font-bold text-solar-base02 mb-1">Holt-Winters y Benchmark Integrador</h3>
+                        <p class="text-solar-base01 text-xs mb-4">Ajuste de Holt-Winters amortiguado y torneo de 5 modelos (Ingenuo, SARIMA, HW, LSTM, Transformer) con MASE.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <a href="notebooks/html/N5_HoltWinters_Benchmark.html" class="p-2 bg-solar-green/15 text-solar-green rounded hover:bg-solar-green hover:text-white transition-colors text-xs font-mono font-medium flex justify-between items-center">
+                            <span><i class="fa-solid fa-file-code mr-1"></i>Ver en HTML</span><i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="notebooks/N5_HoltWinters_Benchmark.ipynb" download class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-brands fa-python mr-1"></i>.ipynb
+                            </a>
+                            <a href="https://colab.research.google.com/github/alxcn/Models_MA3001B/blob/main/notebooks/N5_HoltWinters_Benchmark.ipynb" target="_blank" rel="noopener noreferrer" class="flex-1 p-1.5 bg-solar-base2 rounded text-solar-base02 hover:bg-solar-base1/30 transition-colors text-[11px] font-mono text-center">
+                                <i class="fa-solid fa-cloud mr-1"></i>Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Resources Section -->
+    <section class="bg-solar-base2 border-t border-solar-base1/20 py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-serif font-bold text-solar-base02 mb-6 text-center">Ecosistema y Librerías</h2>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                <a href="https://pytorch.org/" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-orange transition-all">
+                    <i class="fa-solid fa-fire text-2xl text-solar-orange mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">PyTorch</span>
+                </a>
+                <a href="https://www.statsmodels.org/" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-blue transition-all">
+                    <i class="fa-solid fa-chart-line text-2xl text-solar-blue mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">Statsmodels</span>
+                </a>
+                <a href="https://scikit-learn.org/" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-yellow transition-all">
+                    <i class="fa-solid fa-brain text-2xl text-solar-yellow mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">Scikit-Learn</span>
+                </a>
+                <a href="https://scipy.org/" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-cyan transition-all">
+                    <i class="fa-solid fa-atom text-2xl text-solar-cyan mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">SciPy</span>
+                </a>
+                <a href="https://pandas.pydata.org/" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-violet transition-all">
+                    <i class="fa-solid fa-table text-2xl text-solar-violet mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">pandas</span>
+                </a>
+                <a href="https://giotto-ai.github.io/gtda-docs/latest/index.html" target="_blank" rel="noopener noreferrer" class="card-solar p-4 rounded-lg text-center hover:border-solar-green transition-all">
+                    <i class="fa-solid fa-shapes text-2xl text-solar-green mb-2"></i>
+                    <span class="block text-xs font-bold font-mono text-solar-base02 uppercase">Giotto-TDA</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 text-center text-solar-base01 text-xs border-t border-solar-base2 bg-solar-base3 font-serif">
+        <div class="max-w-5xl mx-auto">
+            <p class="mb-1 uppercase tracking-widest font-bold text-solar-base02">Tecnológico de Monterrey | Departamento de Matemáticas</p>
+            <p>&copy; 2026 MA3001B: Desarrollo de Proyectos de Ingeniería de Matemáticas. Profesor Alejandro Ucan-Puc. Desarrollado con Reveal.js y Jupyter.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
