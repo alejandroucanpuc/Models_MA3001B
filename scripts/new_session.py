@@ -24,7 +24,7 @@ SESSION_INDEX_TEMPLATE = """<!doctype html>
 \t<link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
 \t<link rel="stylesheet" href="../assets/reveal/dist/theme/solarized.css">
 \t<link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
-\t<link rel="stylesheet" href="../assets/reveal/katex/katex.min.css">
+\t<link rel="stylesheet" href="../assets/reveal/katex/dist/katex.min.css">
 \t<link rel="stylesheet" href="../assets/css/theme-ucan.css">
 
 \t<!-- Font Awesome -->
