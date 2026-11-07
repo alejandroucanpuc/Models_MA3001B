@@ -20,6 +20,9 @@ Sitio web del curso con diapositivas interactivas en Reveal.js (editables en Mar
 │   ├── index.html                  # Visor Reveal.js configurado con plugins
 │   ├── slides.md                   # AQUÍ se edita el contenido de las diapositivas
 │   └── img/                        # Gráficas generadas para la presentación
+├── text-embeddings/                # Taller / Masterclass en Text Embeddings (Math, Pipelines, Cost)
+│   ├── index.html                  # Visor Reveal.js con tema Solarized
+│   └── slides.md                   # Diapositivas completas en Markdown
 ├── notebooks/
 │   ├── N1_RedesSecuenciales_Transformers.ipynb      (Semana 4)
 │   ├── N2_Estacionariedad_Descomposicion.ipynb      (Semana 5)
@@ -77,6 +80,7 @@ Abra su navegador en:
 - **Semana 06:** [http://localhost:8000/semana-06/](http://localhost:8000/semana-06/)
 - **Semana 07:** [http://localhost:8000/semana-07/](http://localhost:8000/semana-07/)
 - **Semana 08:** [http://localhost:8000/semana-08/](http://localhost:8000/semana-08/)
+- **Text Embeddings:** [http://localhost:8000/text-embeddings/](http://localhost:8000/text-embeddings/)
 - **Tutoriales HTML:** [http://localhost:8000/notebooks/html/N1_RedesSecuenciales_Transformers.html](http://localhost:8000/notebooks/html/N1_RedesSecuenciales_Transformers.html)
 
 ---

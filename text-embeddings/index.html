@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>MA3001B - Text Embeddings in Python: Math, Pipelines, Metrics & Cost</title>
+
+	<link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+	<link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+	<link rel="stylesheet" href="../assets/reveal/dist/theme/solarized.css">
+	<link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+	<link rel="stylesheet" href="../assets/reveal/katex/katex.min.css">
+	<link rel="stylesheet" href="../assets/css/theme-ucan.css">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-markdown="slides.md"
+			         data-separator="^\n---\n"
+			         data-separator-vertical="^\n--\n"
+			         data-separator-notes="^Note:">
+			</section>
+		</div>
+	</div>
+
+	<!-- Barra de navegación fija / botón volver -->
+	<div style="position: fixed; bottom: 12px; left: 16px; z-index: 99; font-family: Inter, sans-serif;">
+		<a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(238, 232, 213, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(181, 137, 0, 0.3); border-radius: 6px; font-size: 12px; font-weight: 600; color: #073642; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.06); transition: all 0.2s ease;">
+			<i class="fa-solid fa-arrow-left" style="color: #CB4B16;"></i> Portada MA3001B
+		</a>
+	</div>
+
+	<script src="../assets/reveal/dist/reveal.js"></script>
+	<script src="../assets/reveal/plugin/markdown/markdown.js"></script>
+	<script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+	<script src="../assets/reveal/plugin/notes/notes.js"></script>
+	<script src="../assets/reveal/plugin/math/math.js"></script>
+	<script src="../assets/reveal/plugin/search/search.js"></script>
+	<script src="../assets/reveal/plugin/zoom/zoom.js"></script>
+	<script>
+		Reveal.initialize({
+			hash: true,
+			slideNumber: "c/t",
+			controls: true,
+			progress: true,
+			center: false,
+			transition: "slide",
+			katex: {
+				local: "../assets/reveal/katex"
+			},
+			plugins: [
+				RevealMarkdown,
+				RevealHighlight,
+				RevealNotes,
+				RevealMath.KaTeX,
+				RevealSearch,
+				RevealZoom
+			]
+		});
+	</script>
+	<script>
+		if (window.location.protocol === "file:") {
+			window.addEventListener("DOMContentLoaded", () => {
+				const warn = document.createElement("div");
+				warn.style.cssText = "position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;background:#DC322F;color:#FFF;padding:16px 24px;border-radius:8px;font-family:sans-serif;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,0.3);text-align:center;max-width:620px;line-height:1.5;";
+				warn.innerHTML = "<strong>⚠️ Estás abriendo este archivo con <code>file://</code></strong><br>Por políticas de seguridad del navegador (CORS), Reveal.js requiere un servidor HTTP local para leer <code>slides.md</code>.<br><br><strong>Solución:</strong> Ejecuta en tu terminal:<br><code style=\"background:#073642;color:#EEE8D5;padding:4px 8px;border-radius:4px;font-weight:bold;\">python3 -m http.server 8000</code><br>Luego visita: <a href=\"http://localhost:8000\" style=\"color:#FDF6E3;text-decoration:underline;font-weight:bold;\">http://localhost:8000</a>";
+				document.body.appendChild(warn);
+			});
+		}
+	</script>
+</body>
+</html>
+
