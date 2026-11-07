@@ -217,22 +217,117 @@
   margin-bottom: 0.4em;
 }
 
-/* Code & Pre */
+/* Code & Pre: Sleek macOS Dark Terminal Window */
 .reveal pre {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  border-radius: 8px;
-  background: #EEE8D5;
-  border: 1px solid rgba(181, 137, 0, 0.25);
-  margin: 12px 0;
-  width: 100%;
+  position: relative !important;
+  background: #002B36 !important; /* Solarized Dark Base03 */
+  border: 1px solid rgba(147, 161, 161, 0.3) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 30px rgba(7, 54, 66, 0.2), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  margin: 14px auto !important;
+  width: 100% !important;
+  padding-top: 32px !important; /* Space for window traffic lights */
+  overflow: hidden !important;
+}
+
+/* macOS Terminal Window Controls (Traffic Lights) */
+.reveal pre::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 11px !important;
+  left: 14px !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-radius: 50% !important;
+  background: #FF5F56 !important; /* Close (red) */
+  box-shadow: 18px 0 0 #FFBD2E, 36px 0 0 #27C93F !important; /* Minimize (yellow), Maximize (green) */
+  z-index: 5 !important;
+}
+
+/* Terminal top bar header title */
+.reveal pre::after {
+  content: "python3 terminal" !important;
+  position: absolute !important;
+  top: 8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  font-family: 'Fira Code', monospace !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #839496 !important; /* Base0 */
+  letter-spacing: 0.06em !important;
+  opacity: 0.8 !important;
+  z-index: 4 !important;
 }
 
 .reveal pre code {
-  font-family: 'Fira Code', monospace !important;
-  font-size: 0.72em;
-  line-height: 1.35;
-  color: #073642;
-  padding: 12px 16px;
+  font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace !important;
+  font-size: 0.68em !important;
+  line-height: 1.45 !important;
+  background: #002B36 !important;
+  color: #93A1A1 !important; /* Base1 */
+  padding: 14px 18px 16px 18px !important;
+  display: block !important;
+  max-height: 480px !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #586E75 #002B36 !important;
+}
+
+/* Syntax Highlighting on Dark Terminal */
+.reveal pre code .hljs-keyword,
+.reveal pre code .hljs-selector-tag {
+  color: #859900 !important; /* Green */
+  font-weight: 600 !important;
+}
+
+.reveal pre code .hljs-string,
+.reveal pre code .hljs-addition {
+  color: #2AA198 !important; /* Cyan */
+}
+
+.reveal pre code .hljs-comment,
+.reveal pre code .hljs-quote {
+  color: #657B83 !important; /* Base00 */
+  font-style: italic !important;
+}
+
+.reveal pre code .hljs-number,
+.reveal pre code .hljs-literal {
+  color: #D33682 !important; /* Magenta */
+}
+
+.reveal pre code .hljs-title,
+.reveal pre code .hljs-title.function_,
+.reveal pre code .hljs-function {
+  color: #268BD2 !important; /* Blue */
+  font-weight: 600 !important;
+}
+
+.reveal pre code .hljs-params {
+  color: #B58900 !important; /* Yellow */
+}
+
+.reveal pre code .hljs-built_in,
+.reveal pre code .hljs-builtin-name {
+  color: #CB4B16 !important; /* Orange */
+}
+
+.reveal pre code .hljs-attr,
+.reveal pre code .hljs-variable {
+  color: #B58900 !important; /* Yellow */
+}
+
+/* Reveal.js Code Line Focus Highlights */
+.reveal .hljs .line--focus {
+  background: rgba(42, 161, 152, 0.22) !important;
+  border-left: 3px solid #2AA198 !important;
+  padding-left: 6px !important;
+  margin-left: -9px !important;
+}
+
+.reveal .hljs:not(.has-highlights) .line--focus {
+  background: transparent !important;
 }
 
 /* Slide background accents */

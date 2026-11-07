@@ -10,6 +10,8 @@
 	<link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
 	<link rel="stylesheet" href="../assets/reveal/dist/theme/solarized.css">
 	<link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+	<!-- KaTeX Styles (Local + CDN fallback) -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 	<link rel="stylesheet" href="../assets/reveal/katex/katex.min.css">
 	<link rel="stylesheet" href="../assets/css/theme-ucan.css">
 
@@ -49,6 +51,11 @@
 			progress: true,
 			center: false,
 			transition: "slide",
+			width: 1200,
+			height: 720,
+			margin: 0.05,
+			minScale: 0.2,
+			maxScale: 2.0,
 			katex: {
 				local: "../assets/reveal/katex"
 			},
@@ -61,6 +68,28 @@
 				RevealZoom
 			]
 		});
+	</script>
+	<!-- KaTeX CDN Scripts (Guaranteed Math Rendering on Deploy) -->
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+	<script>
+		// Extra pass to guarantee all LaTeX delimiters render after markdown parsing
+		function triggerKaTeX() {
+			if (window.renderMathInElement) {
+				renderMathInElement(document.body, {
+					delimiters: [
+						{left: "$$", right: "$$", display: true},
+						{left: "$", right: "$", display: false},
+						{left: "\\(", right: "\\)", display: false},
+						{left: "\\[", right: "\\]", display: true}
+					],
+					throwOnError: false
+				});
+			}
+		}
+		window.addEventListener("load", () => { setTimeout(triggerKaTeX, 350); });
+		Reveal.on("ready", () => { setTimeout(triggerKaTeX, 200); });
+		Reveal.on("slidechanged", () => { setTimeout(triggerKaTeX, 100); });
 	</script>
 	<script>
 		if (window.location.protocol === "file:") {
